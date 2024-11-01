@@ -51,10 +51,10 @@ Create a `.env` file with your API keys:
 ANTHROPIC_API_KEY=your_anthropic_key
 OPENAI_API_KEY=your_openai_key
 TAVILY_API_KEY=your_tavily_key
-
+LANGSMITH_API_KEY=your_langsmith_key
 # Optional: Specify models
 ANTHROPIC_MODEL=claude-3-5-sonnet-20240620
-OPENAI_MODEL=gpt-4
+OPENAI_MODEL=gpt-4o
 ```
 
 ## Architecture
@@ -122,12 +122,73 @@ tools = [web_search, RequestAssistance, CustomTool]
 llm_with_tools = llm.bind_tools(tools)
 ```
 
-## Deployment
+## Installation
 
 1. Clone the repository
 2. Install dependencies: `pip install -r requirements.txt`
 3. Set up environment variables
-4. Run the application: `python main.py`
+
+## Local Testing
+
+Run your app locally using the LangGraph server:
+
+1. Install the CLI:
+```bash
+pip install langgraph-cli
+```
+
+2. Add your `LANGSMITH_API_KEY` to `.env`
+
+3. Start the server:
+```bash
+langgraph up
+```
+The server will run at `http://localhost:8123`
+
+4. Test the endpoint:
+```bash
+curl --request POST \
+    --url http://localhost:8123/runs/stream \
+    --header 'Content-Type: application/json' \
+    --data '{
+    "assistant_id": "agent",
+    "input": {
+        "messages": [
+            {
+                "role": "user",
+                "content": "Your test message here"
+            }
+        ]
+    },
+    "stream_mode": "updates"
+}'
+```
+
+The server will return streamed responses from your chatbot, including results from any tools used during the conversation.
+
+## Deployment
+
+Deploy your chatbot to LangGraph Cloud:
+
+1. Push your code to a GitHub repository
+2. Navigate to LangSmith and select `LangGraph Cloud` from the left navbar
+3. Click `+ New Deployment`
+
+### First-time setup
+If this is your first deployment, click `Import from GitHub` to connect LangGraph Cloud to your GitHub account.
+
+### Deployment Configuration
+1. Select your GitHub username/organization
+2. Choose your repository
+3. Name your deployment
+4. Specify branch or commit SHA
+5. Set path to `langgraph.json`
+6. Add required environment variables:
+   - `ANTHROPIC_API_KEY`
+   - `TAVILY_API_KEY`
+
+Click `Submit` to deploy. Your application status will be available in the deployments dashboard.
+
 
 ## Contributing
 
