@@ -1,5 +1,6 @@
 # Let's start from scratch for convinience
 ## Imports
+from dotenv import load_dotenv
 from langchain_anthropic import ChatAnthropic
 from langchain_core.messages import AIMessage, ToolMessage
 from langchain_community.tools.tavily_search import TavilySearchResults
@@ -12,6 +13,9 @@ from pydantic import BaseModel
 from typing import Annotated, TypedDict, Union
 from functools import partial
 import os
+
+# Load environment variables
+load_dotenv()
 
 OPENAI_MODEL = os.environ.get('OPENAI_MODEL', 'gpt-4o')
 ANTHROPIC_MODEL = os.environ.get('ANTHROPIC_MODEL', 'claude-3-5-sonnet-20240620')
